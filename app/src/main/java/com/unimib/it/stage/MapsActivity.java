@@ -62,8 +62,10 @@ import static com.google.android.gms.maps.GoogleMap.MAP_TYPE_TERRAIN;
 
 //starting activity
 public class MapsActivity extends FragmentActivity implements OnMyLocationButtonClickListener,
-        OnMyLocationClickListener, OnMapReadyCallback,AdapterView.OnItemSelectedListener, GoogleMap.OnMapClickListener,
-        GoogleMap.OnInfoWindowClickListener, GoogleMap.OnMarkerClickListener, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
+        OnMyLocationClickListener, OnMapReadyCallback,AdapterView.OnItemSelectedListener,
+        GoogleMap.OnMapClickListener, GoogleMap.OnInfoWindowClickListener,
+        GoogleMap.OnMarkerClickListener, GoogleApiClient.ConnectionCallbacks,
+        GoogleApiClient.OnConnectionFailedListener {
 
     private GoogleMap mMap; // map
     private Bundle b; // object used for passing parameters to other activities
@@ -224,7 +226,7 @@ public class MapsActivity extends FragmentActivity implements OnMyLocationButton
                 .commit();
     }
 
-    // method activated for searching a route
+    // method activated for calculating a route
     private void search_route() {
         MODE = 2;
 
@@ -239,7 +241,6 @@ public class MapsActivity extends FragmentActivity implements OnMyLocationButton
                 .show(autocompleteFragmentArrival)
                 .commit();
     }
-
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
@@ -265,7 +266,6 @@ public class MapsActivity extends FragmentActivity implements OnMyLocationButton
         mMap.setOnInfoWindowClickListener(this);
         mMap.setOnMarkerClickListener(this);
     }
-
 
     @Override
     public void onMyLocationClick(@NonNull Location location) {
@@ -392,7 +392,6 @@ public class MapsActivity extends FragmentActivity implements OnMyLocationButton
 
     }
 
-
     @Override
     public boolean onMarkerClick(Marker marker) {
         if(MODE==1)
@@ -416,7 +415,6 @@ public class MapsActivity extends FragmentActivity implements OnMyLocationButton
         }
     }
 
-
     private String getDirectionsUrl(LatLng origin, LatLng dest) {
 
         // Origin of route
@@ -434,15 +432,14 @@ public class MapsActivity extends FragmentActivity implements OnMyLocationButton
         // Output format
         String output = "json";
 
+        String key = "key=AIzaSyACLdJSJVbFYgHNEslpK3Nhk8wSp_hvI8U";
+
         // Building the url to the web service
-        String url = "https://maps.googleapis.com/maps/api/directions/" + output + "?" + parameters;
+        String url = "https://maps.googleapis.com/maps/api/directions/" + output + "?" + parameters + "&" + key;
 
         return url;
     }
 
-    /**
-     * A method to download json data from url
-     */
     private String downloadUrl(String strUrl) throws IOException {
         String data = "";
         InputStream iStream = null;
@@ -481,8 +478,6 @@ public class MapsActivity extends FragmentActivity implements OnMyLocationButton
         return data;
     }
 
-
-    // Fetches data from url passed
     private class DownloadTask extends AsyncTask<String, Void, String> {
         ParserTask parserTask = null;
 
@@ -500,6 +495,7 @@ public class MapsActivity extends FragmentActivity implements OnMyLocationButton
                 Log.d("Background Task", e.toString());
             }
             return data;
+
         }
 
         // Executes in UI thread, after the execution of
@@ -516,9 +512,6 @@ public class MapsActivity extends FragmentActivity implements OnMyLocationButton
 
     }
 
-    /**
-     * A class to parse the Google Places in JSON format
-     */
     private class ParserTask extends AsyncTask<String, Integer, List<List<HashMap<String, String>>>> {
 
         // Parsing the data in non-ui thread
@@ -637,12 +630,9 @@ public class MapsActivity extends FragmentActivity implements OnMyLocationButton
         }
     }
 
-
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
         updateMapType();
     }
-
-
 
     private void updateMapType() {
         // No toast because this can also be called by the Android framework in onResume() at which
